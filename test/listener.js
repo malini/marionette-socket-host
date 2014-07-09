@@ -6,17 +6,18 @@ worker.bind('ipc:///tmp/marionette_socket_host_worker');
 
 var _proc = null;
 function onStart(data) {
+  function done(err, proc) {
+    if (err) console.log(err);
+    _proc = proc;
+    worker.send({action: 'ready_start'});
+  }
+
   function run() {
     mozrunner.run(
       data.target,
       data.options,
       done
-      );
-  }
-
-  function done(err, proc) {
-    _proc = proc;
-    worker.send({'action': 'ready_start'});
+    );
   }
 
   run();
@@ -30,7 +31,7 @@ function onStop(data) {
   }
 
   function done() {
-    worker.send({'action': 'ready_stop'});
+    worker.send({action: 'ready_stop'});
   }
 };
 
