@@ -8,7 +8,7 @@ var DEFAULT_LOCATION = fsPath.join(process.cwd(), 'b2g');
 /**
  * Host interface for marionette-js-runner.
  *
- * @param {Object} [options] for host see spawn for now.
+ * @param {Object} [options] for host that get forwarded over the socket.
  */
 function Host(options) {
   // TODO: host api should have some concept of a "asset" directory
@@ -32,14 +32,6 @@ Host.metadata = Object.freeze({
 
 Host.prototype = {
   /**
-   * Reference to b2g-desktop process.
-   *
-   * @type {ChildProcess}
-   * @private
-   */
-  _process: null,
-
-  /**
    * Starts the b2g-desktop process.
    *
    * @param {String} profile path.
@@ -47,6 +39,7 @@ Host.prototype = {
    * @param {Function} callback [Error err].
    */
   start: function(profile, options, callback) {
+    debug('start called with: ', profile, options);
     if (typeof options === 'function') {
       callback = options;
       options = null;
@@ -62,16 +55,11 @@ Host.prototype = {
     userOptions.runtime = this.options.customRuntime;
     userOptions.chrome = 'chrome://b2g/content/shell.html';
 
-    debug('start');
     var self = this;
     var target = userOptions.runtime || self.options.runtime;
 
-    // Target is only used if tests are running on b2g desktop, but
-    // this host has no way of knowing whether that is true or not.
-    debug('binary: ', target);
-    debug('profile: ', profile);
-
     function done(data) {
+      debug('received ready_start, application should be running');
       callback();
     }
 
@@ -92,9 +80,10 @@ Host.prototype = {
    * @param {Function} callback [Error err].
    */
   stop: function(callback) {
-    debug('stop');
+    debug('stop called');
     var self = this;
     function done(data) {
+      debug('received ready_stop, application should be stopped');
       self.runner.close();
       callback();
     }
