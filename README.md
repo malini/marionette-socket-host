@@ -1,7 +1,7 @@
 # Socket host for marionette-js-runner
 
 [![Build
-Status](https://travis-ci.org/ahal/marionette-socket-host.png)](https://travis-ci.org/ahal/marionette-socket-host)
+Status](https://travis-ci.org/mozilla-b2g/marionette-socket-host.png)](https://travis-ci.org/mozilla-b2g/marionette-socket-host)
 
 A complete target environment for marionette which sends commands over a socket.
 
