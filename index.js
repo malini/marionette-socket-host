@@ -89,6 +89,10 @@ Host.prototype = {
     try {
       var out = execSync(__dirname + '/scripts/setup_python.sh ' + __dirname);
     } catch (e) {
+      //TODO: figure out how to get error code/verify that something actually went wrong
+      // right now, an Error will be thrown if stderr has any data, which doesn't really mean
+      //that the process failed! it will throw an error when installing pyzmq b/c that writes to stderr for example, but
+      // the script actually succeeds
       console.log("GOT ERR: " + e);
     }
     // start the python runner service
