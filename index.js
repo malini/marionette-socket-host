@@ -1,6 +1,8 @@
 var fsPath = require('path'),
     fs = require('fs'),
     corredor = require('corredor-js'),
+    spawn = require('child_process').spawn,
+    execSync = require('exec-sync'),
     debug = require('debug')('marionette-socket-host');
 
 var DEFAULT_LOCATION = fsPath.join(process.cwd(), 'b2g');
@@ -14,11 +16,16 @@ function Host(options) {
   // TODO: host api should have some concept of a "asset" directory
   //       where we can stuff b2g-desktop without saving it in node_modules or
   //       cwd.
+
   this.options = options || {};
   this.options.runtime = this.options.runtime || DEFAULT_LOCATION;
 
   this.address = 'ipc:///tmp/marionette_socket_host_worker';
   this.runner = null;
+  this.b2gpath = options.b2gpath || null;
+  this.buildapp = options.buildapp || null;
+  this.serial = options.serial || null;
+  this.symbols_path = options.symbols_path || null;
 }
 
 /**
@@ -32,7 +39,7 @@ Host.metadata = Object.freeze({
 
 Host.prototype = {
   /**
-   * Starts the b2g-desktop process.
+   * Starts the device/b2g-desktop process.
    *
    * @param {String} profile path.
    * @param {Object} [options] settings provided by caller.
@@ -63,6 +70,42 @@ Host.prototype = {
       callback();
     }
 
+    // prepare gaia-integration command
+    cmd = 'gaia-integration';
+    if (this.buildapp) {
+      cmd += ' --buildapp=' + this.buildapp;
+    }
+    if (this.b2gpath) {
+      cmd += ' --b2g_home=' + this.b2gpath;
+    }
+    if (this.serial) {
+      cmd += ' --serial=' + this.serial;
+    }
+    if (this.symbols_path) {
+      cmd += ' --symbols_path=' + this.symbols_path;
+    }
+    // install dependencies for the python runner-service
+    console.log('setting up device environment');
+    try {
+      var out = execSync(__dirname + '/scripts/setup_python.sh ' + __dirname);
+    } catch (e) {
+      console.log("GOT ERR: " + e);
+    }
+    // start the python runner service
+    var python_child = spawn(__dirname + "/scripts/run_python.sh", [__dirname, cmd]);
+    python_child.stdout.on('data', function (data) {
+      console.log('runner-service out: ' + data);
+    })
+    python_child.stderr.on('data', function (data) {
+      console.log('runner-service err: ' + data);
+    })
+    python_child.on('error', function (code) {
+      console.log('child process exited with code ' + code);
+      });
+
+    process.on('SIGINT', function () {
+      python_child.kill();
+    });
     // Create and destroy a new socket each time, otherwise the socket
     // remains open after suite_end and causes a timeout when a second
     // Host attempts to connect, see bug 994888.
