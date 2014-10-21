@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # TODO: isntall virtual env if they dont have it
 # TODO: install the right version of python of they don't have it
@@ -56,8 +56,7 @@ if [ $? != 0 ]; then
   sudo pip install virtualenv || { echo 'error installing virtualenv' ; exit 1; }
 fi
 
-virtualenv -p $USE_PYTHON $1/venv
-source $1/venv/bin/activate
-cd $1/python/runner-service
+virtualenv -p $USE_PYTHON $PWD/venv
+source ./venv/bin/activate
+cd python/runner-service
 python setup.py develop
-cd -

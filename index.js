@@ -2,7 +2,6 @@ var fsPath = require('path'),
     fs = require('fs'),
     corredor = require('corredor-js'),
     spawn = require('child_process').spawn,
-    execSync = require('exec-sync'),
     debug = require('debug')('marionette-socket-host');
 
 var DEFAULT_LOCATION = fsPath.join(process.cwd(), 'b2g');
@@ -86,30 +85,20 @@ Host.prototype = {
     }
     // install dependencies for the python runner-service
     console.log('setting up device environment');
-    try {
-      var out = execSync(__dirname + '/scripts/setup_python.sh ' + __dirname);
-    } catch (e) {
-      //TODO: figure out how to get error code/verify that something actually went wrong
-      // right now, an Error will be thrown if stderr has any data, which doesn't really mean
-      //that the process failed! it will throw an error when installing pyzmq b/c that writes to stderr for example, but
-      // the script actually succeeds
-      console.log("GOT ERR: " + e);
-    }
     // start the python runner service
     var python_child = spawn(__dirname + "/scripts/run_python.sh", [__dirname, cmd]);
+
     python_child.stdout.on('data', function (data) {
       console.log('runner-service out: ' + data);
     })
     python_child.stderr.on('data', function (data) {
       console.log('runner-service err: ' + data);
     })
+
     python_child.on('error', function (code) {
       console.log('child process exited with code ' + code);
-      });
-
-    process.on('SIGINT', function () {
-      python_child.kill();
     });
+
     // Create and destroy a new socket each time, otherwise the socket
     // remains open after suite_end and causes a timeout when a second
     // Host attempts to connect, see bug 994888.

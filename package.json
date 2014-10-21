@@ -12,12 +12,11 @@
     "marionette-js-runner"
   ],
   "dependencies": {
-    "debug": "*",
-    "corredor-js": "~0.1.1"
+    "corredor-js": "~0.1.1",
+    "debug": "*"
   },
   "devDependencies": {
     "empty-port": "~0.0.1",
-    "execSync": "~1.0.2",
     "mozilla-profile-builder": "~0.2.0",
     "mocha": "~1.7",
     "node-static": "~0.6",
@@ -34,7 +33,8 @@
     "url": "git://github.com/mozilla-b2g/marionette-socket-host.git"
   },
   "scripts": {
-    "preinstall": "source scripts/preinstall.sh",
+    "preinstall": "./scripts/preinstall.sh",
+    "install": "./scripts/setup_python.sh",
     "test": "make test"
   }
 }
