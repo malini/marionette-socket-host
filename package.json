@@ -1,6 +1,6 @@
 {
   "name": "marionette-socket-host",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "author": "Andrew Halberstadt",
   "description": "marionette-js-runner host for sending actions over a socket",
   "main": "index.js",
@@ -12,8 +12,8 @@
     "marionette-js-runner"
   ],
   "dependencies": {
-    "debug": "*",
-    "corredor-js": "~0.1.1"
+    "corredor-js": "~0.1.1",
+    "debug": "*"
   },
   "devDependencies": {
     "empty-port": "~0.0.1",
@@ -33,6 +33,8 @@
     "url": "git://github.com/mozilla-b2g/marionette-socket-host.git"
   },
   "scripts": {
+    "preinstall": "./scripts/preinstall.sh",
+    "install": "./scripts/setup_python.sh",
     "test": "make test"
   }
 }
