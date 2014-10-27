@@ -81,7 +81,7 @@ Host.prototype = {
       cmd += ' --serial=' + this.serial;
     }
     if (this.symbols_path) {
-      cmd += ' --symbols_path=' + this.symbols_path;
+      cmd += ' --symbols-path=' + this.symbols_path;
     }
     // start the python runner service
     var python_child = spawn(__dirname + "/scripts/run_python.sh", [__dirname, cmd]);
