@@ -120,12 +120,12 @@ class DeviceHandler(MozrunnerHandler):
         port = options.get('port')
         profile = Profile(profile=options.get('profile'))
 
-        self.runner.device.setup_port_forwarding(local_port=port, remote_port=2828)
+        self.runner.device.setup_port_forwarding(local_port=port, remote_port=port)
 
         self.runner.profile = profile
         self.runner.start()
 
-        self.runner.device.setup_port_forwarding(local_port=port, remote_port=2828)
+        self.runner.device.setup_port_forwarding(local_port=port, remote_port=port)
         if not self.runner.device.wait_for_port(port):
             raise Exception("Wait for port timed out")
 
