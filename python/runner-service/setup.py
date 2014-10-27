@@ -3,6 +3,11 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from setuptools import setup, find_packages
+# NOTE: import the following due to linux bug http://bugs.python.org/issue15881
+try:
+    import multiprocessing
+except ImportError:
+    pass
 
 PACKAGE_VERSION = '0.1'
 
