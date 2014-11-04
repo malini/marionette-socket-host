@@ -21,6 +21,8 @@ def cli(args=sys.argv[1:]):
         rhandler_args['b2g_home'] = args.b2g_home
     if args.buildapp == 'device':
         rhandler_args.update({'serial': args.device_serial})
+    if args.dump_path:
+        rhandler_args['dump_path'] = args.dump_path
     rhandler = runner_handlers[args.buildapp](**rhandler_args)
 
     listener = SocketListener()

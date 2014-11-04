@@ -16,16 +16,18 @@ class MozrunnerHandler(object):
     __metaclass__ = ABCMeta
     runner = None
 
-    def __init__(self, symbols_path=None):
+    def __init__(self, symbols_path=None, *args, **kwargs):
         process_args = {
             # TODO save gecko output to a file rather than discarding it
             'stream': open(os.devnull, 'wb'),
             'onFinish': self.on_finish,
         }
 
+        dump_path = kwargs.pop('dump_path', os.path.join(os.getcwd(), "minidumps"))
         self.common_runner_args = {
             'process_args': process_args,
             'symbols_path': symbols_path,
+            'dump_save_path': dump_path,
         }
 
     @abstractmethod

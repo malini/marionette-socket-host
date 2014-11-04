@@ -29,6 +29,12 @@ class GaiaIntegrationParser(ArgumentParser):
           "default": None,
           "help": "serial ID of a device to use for adb / fastboot"
         }],
+        [["--dump-path"],
+        { "dest": "dump_path",
+          "default": None,
+          "help": "path in which to store crash dumps. Will default to " \
+          "the 'minidumps' directory in the current working directory"
+        }],
     ]
 
     def __init__(self, *args, **kwargs):
