@@ -12,7 +12,7 @@ except ImportError:
 PACKAGE_VERSION = '0.1'
 
 deps = ['corredor >= 0.1',
-        'mozrunner >= 6.2',
+        'mozrunner >= 6.5',
         'mozprofile >= 0.21',
         'manifestparser >= 0.6']
 
