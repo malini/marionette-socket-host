@@ -17,10 +17,12 @@ if ! pkg-config libzmq --exists; then
     sudo ldconfig
   }
   if [ $SYS == 'Darwin' ]; then 
-    echo "installing zmq from brew"
-    which brew
-    if [ $? == 0 ]; then
-      brew install zmq
+    echo "Checking if zmq is installed from brew"
+    if which brew; then
+      if ! brew list zmq; then 
+        echo "Installing zmq from brew"
+        brew install zmq
+      fi
     else
       install_zmq_from_source
     fi
