@@ -1,6 +1,6 @@
 {
   "name": "marionette-socket-host",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Andrew Halberstadt",
   "description": "marionette-js-runner host for sending actions over a socket",
   "main": "index.js",
